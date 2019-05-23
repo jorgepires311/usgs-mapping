@@ -63,24 +63,37 @@ function createFeatures(earthquakeData) {
 
 function createMap(earthquakes) {
   // Define streetmap and darkmap layers
-  var streetmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+  var satMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
     // attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
-    id: "mapbox.streets",
+    id: "mapbox.satellite",
     accessToken: 'pk.eyJ1Ijoiam9yZ2VwaXJlcyIsImEiOiJjanZvajBudGMwYmptNDRxbG95cWU0ZW0yIn0.x51Y6jI0l8i17yi1qdANpA'
   });
 
-  var lightMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+  var greyMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
     // attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
     id: "mapbox.light",
     accessToken:'pk.eyJ1Ijoiam9yZ2VwaXJlcyIsImEiOiJjanZvajBudGMwYmptNDRxbG95cWU0ZW0yIn0.x51Y6jI0l8i17yi1qdANpA'
   });
-
+  var outdoorsMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+    // attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "mapbox.outdoors",
+    accessToken:'pk.eyJ1Ijoiam9yZ2VwaXJlcyIsImEiOiJjanZvajBudGMwYmptNDRxbG95cWU0ZW0yIn0.x51Y6jI0l8i17yi1qdANpA'
+  });
+  var comicMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+    // attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "mapbox.comic",
+    accessToken:'pk.eyJ1Ijoiam9yZ2VwaXJlcyIsImEiOiJjanZvajBudGMwYmptNDRxbG95cWU0ZW0yIn0.x51Y6jI0l8i17yi1qdANpA'
+  });
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
-    "Street Map": streetmap,
-    "Light Map": lightMap 
+    "Greyscale": greyMap, 
+    "Satillite": satMap,
+    "Outdoors": outdoorsMap,
+    "Comic":comicMap
   };
 
   // Create overlay object to hold our overlay layer
@@ -94,7 +107,7 @@ function createMap(earthquakes) {
       37.09, -95.71
     ],
     zoom: 5,
-    layers: [lightMap , earthquakes]
+    layers: [greyMap, earthquakes]
   });
 
   // Create a layer control
