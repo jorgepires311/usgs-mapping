@@ -9,7 +9,7 @@ d3.json(queryUrl, function(data) {
   createFeatures(data.features);
 });
 function markerSize(mag) {
-    return mag *5;  
+    return mag *7.5;  
 }
 function markerColor(mag) {
     if(mag >= 5)
@@ -34,15 +34,9 @@ function markerColor(mag) {
     return mColor;  
 }
 function createFeatures(earthquakeData) {
-
-  // Define a function we want to run once for each feature in the features array
-  // Give each feature a popup describing the place and time of the earthquake
   function onEachFeature(feature, layer) {
     layer.bindPopup("<h3>"+ feature.properties.place + "</h3><h4>Magnitude: " + feature.properties.mag + "</h4><hr><p>" + new Date(feature.properties.time) + "</p>"+'<a href="'+feature.properties.url+'" target="_blank">Learn More</a>');
 }
-
-  // Create a GeoJSON layer containing the features array on the earthquakeData object
-  // Run the onEachFeature function once for each piece of data in the array
   var earthquakes = L.geoJSON(earthquakeData, {
     onEachFeature: onEachFeature,
     pointToLayer: function (feature, latlng) {
@@ -56,8 +50,6 @@ function createFeatures(earthquakeData) {
         });
     }
   });
-
-  // Sending our earthquakes layer to the createMap function
   createMap(earthquakes);
 }
 
@@ -69,7 +61,6 @@ function createMap(earthquakes) {
     id: "mapbox.satellite",
     accessToken: 'pk.eyJ1Ijoiam9yZ2VwaXJlcyIsImEiOiJjanZvajBudGMwYmptNDRxbG95cWU0ZW0yIn0.x51Y6jI0l8i17yi1qdANpA'
   });
-
   var greyMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
     // attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
