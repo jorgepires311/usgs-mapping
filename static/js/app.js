@@ -1,10 +1,9 @@
-// https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson
-
 // Store our API endpoint inside queryUrl
-var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
+var quakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
+var plateBoundariesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
 
 // Perform a GET request to the query URL
-d3.json(queryUrl, function(data) {
+d3.json(quakeUrl, function(data) {
   // Once we get a response, send the data.features object to the createFeatures function
   createFeatures(data.features);
 });
@@ -50,14 +49,19 @@ function createFeatures(earthquakeData) {
         });
     }
   });
-  createMap(earthquakes);
+  var platesLayer = new L.LayerGroup();
+  d3.json(plateBoundariesUrl,function(jsonPlates){
+    L.geoJSON(jsonPlates,{
+        color:"red",
+    }).addTo(platesLayer);
+  });
+  createMap(earthquakes,platesLayer);
 }
 
-function createMap(earthquakes) {
-  // Define streetmap and darkmap layers
+function createMap(earthquakes,plates) {
   var satMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
     // attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 18,
+    maxZoom: 12,
     id: "mapbox.satellite",
     accessToken: 'pk.eyJ1Ijoiam9yZ2VwaXJlcyIsImEiOiJjanZvajBudGMwYmptNDRxbG95cWU0ZW0yIn0.x51Y6jI0l8i17yi1qdANpA'
   });
@@ -86,24 +90,21 @@ function createMap(earthquakes) {
     "Outdoors": outdoorsMap,
     "Comic":comicMap
   };
-
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
-    Earthquakes: earthquakes
+    Earthquakes: earthquakes,
+    Plates: plates
   };
-
   // Create our map, giving it the streetmap and earthquakes layers to display on load
   var myMap = L.map("map", {
     center: [
-      37.09, -95.71
+      37.7412, -25.6756
     ],
     zoom: 3,
-    layers: [greyMap, earthquakes]
+    layers: [greyMap, earthquakes,plates]
   });
 
-  // Create a layer control
-  // Pass in our baseMaps and overlayMaps
-  // Add the layer control to the map
+  // Layer control
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
